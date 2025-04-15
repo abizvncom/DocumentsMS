@@ -17,7 +17,7 @@ namespace DocumentsWebApi
                 .AddJsonOptions(options =>
                 {
                     // Disable camel case for JSON serialization
-                    options.JsonSerializerOptions.PropertyNamingPolicy = null; 
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; 
                 });
 
 

@@ -9,7 +9,7 @@ namespace DocumentsWebApi.Controllers.v2
     [Route("api/v{version:apiVersion}/Documents")]
     [ApiVersion(2.0)]
     [ApiController]
-    public class DocumentsController : ControllerBase
+    public class DocumentsController : ApiControllerBase
     {
         private readonly DocumentDbContext _context;
 
@@ -20,9 +20,10 @@ namespace DocumentsWebApi.Controllers.v2
 
         // GET: api/Documents
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Document>>> GetDocuments()
+        public async Task<ActionResult<PaginatedList<Document>>> GetDocuments()
         {
-            return await _context.Documents.ToListAsync();
+            var documents = await PaginatedList<Document>.CreateAsync(_context.Documents, base.GetPageNumber(), base.GetPageSize());
+            return Ok(documents);
         }
 
         // GET: api/Documents/5
