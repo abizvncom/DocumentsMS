@@ -6,3 +6,5 @@
 /DocumentsWebApi/obj
 /DocumentsWebApi/bin/Debug/net9.0
 /DocumentsWebApi/DocumentsWebApi.csproj.user
+/DocumentsWebApiTests/obj
+/DocumentsWebApiTests/bin/Debug/net9.0

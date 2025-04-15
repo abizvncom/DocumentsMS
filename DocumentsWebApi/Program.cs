@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace DocumentsWebApi
 {
-    public class Program
+    public partial class Program
     {
         public static void Main(string[] args)
         {
