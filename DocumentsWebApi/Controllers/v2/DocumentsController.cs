@@ -4,12 +4,9 @@ using DocumentsWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DocumentsWebApi.Controllers
+namespace DocumentsWebApi.Controllers.v2
 {
-    [Route("api/v{version:apiVersion}/documents")]
-    [ApiVersion(0.1, Deprecated = true)]
-    [ApiVersion(0.2, Deprecated = true)]
-    [ApiVersion(1.0)]
+    [Route("api/v{version:apiVersion}/Documents")]
     [ApiVersion(2.0)]
     [ApiController]
     public class DocumentsController : ControllerBase

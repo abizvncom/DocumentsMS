@@ -2,6 +2,7 @@
 using Asp.Versioning;
 using DocumentsWebApi.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace DocumentsWebApi
 {
@@ -12,7 +13,13 @@ namespace DocumentsWebApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    // Disable camel case for JSON serialization
+                    options.JsonSerializerOptions.PropertyNamingPolicy = null; 
+                });
+
 
             // Configure API versioning
             builder.Services.AddApiVersioning(options =>
