@@ -1,6 +1,6 @@
-﻿using DocumentsWebApiTests.Requests;
-using DocumentsWebApiTests.Requests.v2;
-using DocumentsWebApiTests.Responses.v2;
+﻿using DocumentsWebApiTests.Common;
+using DocumentsWebApiTests.v2.Requests;
+using DocumentsWebApiTests.v2.Responses;
 using FluentAssertions;
 using System.Net;
 using System.Net.Http.Json;
@@ -32,17 +32,39 @@ namespace DocumentsWebApiTests.v2
         }
 
         [Fact]
-        public async Task CreateDocument_ReturnsCreated()
+        public async Task GetDocuments_ReturnsOk_WithAPageOfDocuments()
         {
             // Arrange
-            var request = new NewDocumentRequest("Document 1");
+            var pageNumber = 1;
+            var pageSize = 3;
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/v2/Documents?pn={pageNumber}&ps={pageSize}");
+            var documents = await Factory.CreateSampleDocuments(10);
+
+            // Act
+            var response = await Client.SendAsync(request);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var pagedDocuments = await response.Content.ReadFromJsonAsync<PaginatedListResponse<DocumentResponse>>();
+            pagedDocuments.Should().NotBeNull();
+
+            var expectedDocuments = documents.OrderByDescending(d => d.UpdatedAt).TakePage(pageNumber, pageSize);
+            pagedDocuments.Items.BeSerialisedFrom(expectedDocuments);
+        }
+
+        [Fact]
+        public async Task CreateDocument_ReturnsCreated_WhenDataIsValid()
+        {
+            // Arrange
+            var request = new NewDocumentRequest { Title = "Document 1" };
 
             // Act
             var response = await Client.PostAsync("/api/v2/Documents", request.ToJsonHttpContent());
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
-         
+
             var document = await response.Content.ReadFromJsonAsync<DocumentResponse>();
             document.Should().NotBeNull();
             document.BeCreatedFrom(request);
@@ -59,6 +81,24 @@ namespace DocumentsWebApiTests.v2
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task GetDocument_ReturnsOk_WhenExists()
+        {
+            // Arrange
+            var document = await Factory.CreateSampleDocument();
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/api/v2/Documents/{document.Id}");
+
+            // Act
+            var response = await Client.SendAsync(request);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var documentResponse = await response.Content.ReadFromJsonAsync<DocumentResponse>();
+            documentResponse.Should().NotBeNull();
+            documentResponse.BeSerialisedFrom(document);
         }
     }
 }

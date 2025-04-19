@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 
-namespace DocumentsWebApiTests.Requests
+namespace DocumentsWebApiTests.Common
 {
     public static class JsonContentHelper
     {

@@ -1,4 +1,4 @@
-﻿namespace DocumentsWebApiTests.Responses.v2
+﻿namespace DocumentsWebApiTests.v2.Responses
 {
     public sealed record PaginatedListResponse<T>
     {

@@ -22,7 +22,8 @@ namespace DocumentsWebApi.Controllers.v2
         [HttpGet]
         public async Task<ActionResult<PaginatedList<Document>>> GetDocuments()
         {
-            var documents = await PaginatedList<Document>.CreateAsync(_context.Documents, base.GetPageNumber(), base.GetPageSize());
+            var sources = _context.Documents.OrderByDescending(d => d.UpdatedAt);
+            var documents = await PaginatedList<Document>.CreateAsync(sources, base.GetPageNumber(), base.GetPageSize());
             return Ok(documents);
         }
 
