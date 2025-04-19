@@ -79,7 +79,7 @@ namespace DocumentsWebApi.Controllers.v2
             _context.Documents.Add(document);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDocument", new { id = document.Id }, document);
+            return CreatedAtAction(nameof(GetDocument), new { id = document.Id }, document);
         }
 
         // DELETE: api/Documents/5
