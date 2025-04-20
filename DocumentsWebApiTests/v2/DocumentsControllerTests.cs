@@ -1,4 +1,5 @@
 ﻿using DocumentsWebApiTests.Common;
+using DocumentsWebApiTests.v2.Fakers;
 using DocumentsWebApiTests.v2.Requests;
 using DocumentsWebApiTests.v2.Responses;
 using FluentAssertions;
@@ -37,8 +38,9 @@ namespace DocumentsWebApiTests.v2
             // Arrange
             var pageNumber = 1;
             var pageSize = 3;
+            var documentsCount = 10;
             var request = new HttpRequestMessage(HttpMethod.Get, $"/api/v2/Documents?pn={pageNumber}&ps={pageSize}");
-            var documents = await Factory.CreateSampleDocuments(10);
+            var documents = await Factory.CreateSampleDocuments(documentsCount);
 
             // Act
             var response = await Client.SendAsync(request);
@@ -51,13 +53,15 @@ namespace DocumentsWebApiTests.v2
 
             var expectedDocuments = documents.OrderByDescending(d => d.UpdatedAt).TakePage(pageNumber, pageSize);
             pagedDocuments.Items.BeSerialisedFrom(expectedDocuments);
+
+            pagedDocuments.TotalCount.Should().Be(documentsCount);
         }
 
         [Fact]
         public async Task CreateDocument_ReturnsCreated_WhenDataIsValid()
         {
             // Arrange
-            var request = new NewDocumentRequest { Title = "Document 1" };
+            var request = new NewDocumentRequestFaker().Generate(1).First();
 
             // Act
             var response = await Client.PostAsync("/api/v2/Documents", request.ToJsonHttpContent());
