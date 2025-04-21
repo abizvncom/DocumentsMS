@@ -2,10 +2,10 @@ name: Build Web API .NET 9
 
 on:
   push:
-    branches: [ "*" ] # Trigger on any push to any branch
+    branches: [ "**" ] # Trigger on any push to any branch
 
   pull_request:
-    branches: [ "*" ] # Trigger on any pull request to any branch
+    branches: [ "**" ] # Trigger on any pull request to any branch
     types: [ closed, synchronize, opened, edited, reopened ] # Trigger when a pull request is closed (including merges)
         
 jobs:
