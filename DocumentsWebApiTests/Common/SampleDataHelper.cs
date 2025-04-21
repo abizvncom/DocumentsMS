@@ -1,4 +1,4 @@
-﻿using DocumentsWebApi.Data;
+﻿using DocumentsWebApi.Infrastructure;
 using DocumentsWebApi.Models;
 using DocumentsWebApiTests.v2.Fakers;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +25,7 @@ namespace DocumentsWebApiTests.Common
 
             using (var scope = factory.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<DocumentDbContext>();
+                var context = scope.ServiceProvider.GetRequiredService<IDocumentDbContext>();
                 newDocumentRequests.ForEach(documentRequest =>
                 {
                     context.Documents.AddRange(newDocuments);

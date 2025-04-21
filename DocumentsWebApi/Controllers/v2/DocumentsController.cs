@@ -1,5 +1,5 @@
 ﻿using Asp.Versioning;
-using DocumentsWebApi.Data;
+using DocumentsWebApi.Infrastructure;
 using DocumentsWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +11,9 @@ namespace DocumentsWebApi.Controllers.v2
     [ApiController]
     public class DocumentsController : ApiControllerBase
     {
-        private readonly DocumentDbContext _context;
+        private readonly IDocumentDbContext _context;
 
-        public DocumentsController(DocumentDbContext context)
+        public DocumentsController(IDocumentDbContext context)
         {
             _context = context;
         }
@@ -22,7 +22,7 @@ namespace DocumentsWebApi.Controllers.v2
         [HttpGet]
         public async Task<ActionResult<PaginatedList<Document>>> GetDocuments()
         {
-            var sources = _context.Documents.OrderByDescending(d => d.UpdatedAt);
+            var sources = _context.Documents.OrderByDescending(d => d.Id);
             var documents = await PaginatedList<Document>.CreateAsync(sources, base.GetPageNumber(), base.GetPageSize());
             return Ok(documents);
         }
