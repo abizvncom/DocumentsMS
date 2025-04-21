@@ -15,7 +15,7 @@ namespace DocumentsWebApi
                 .AddJsonOptions(options =>
                 {
                     // Disable camel case for JSON serialization
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase; 
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 });
 
 
@@ -37,9 +37,6 @@ namespace DocumentsWebApi
 
             // Configure the database
             builder.ConfigureDbContextServices();
-            //builder.Services.AddDbContext<DocumentDbContext>(opt => opt.UseInMemoryDatabase("DocumentsDb"));
-            //builder.Services.AddDbContext<DocumentDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
-
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi("v1");
@@ -47,18 +44,7 @@ namespace DocumentsWebApi
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
-
-            // Swagger UI configuration
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/openapi/v1.json", "Documents API V1.0");
-                c.SwaggerEndpoint("/openapi/v2.json", "Documents API V2.0");
-            });
+            app.ConfigureOpenApiDocuments();
 
             app.UseHttpsRedirection();
 
