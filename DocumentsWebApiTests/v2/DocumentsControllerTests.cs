@@ -51,7 +51,7 @@ namespace DocumentsWebApiTests.v2
             var pagedDocuments = await response.Content.ReadFromJsonAsync<PaginatedListResponse<DocumentResponse>>();
             pagedDocuments.Should().NotBeNull();
 
-            var expectedDocuments = documents.OrderByDescending(d => d.UpdatedAt).TakePage(pageNumber, pageSize);
+            var expectedDocuments = documents.OrderByDescending(d => d.Id).TakePage(pageNumber, pageSize);
             pagedDocuments.Items.BeSerialisedFrom(expectedDocuments);
 
             pagedDocuments.TotalCount.Should().Be(documentsCount);

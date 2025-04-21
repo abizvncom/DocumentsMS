@@ -8,3 +8,11 @@
 /DocumentsWebApi/DocumentsWebApi.csproj.user
 /DocumentsWebApiTests/obj
 /DocumentsWebApiTests/bin/Debug/net9.0
+/DocumentsWebApi.Infrastructure/bin/Debug/net9.0
+/DocumentsWebApi.Infrastructure/obj
+/DocumentsWebApi.Models/bin/Debug/net9.0
+/DocumentsWebApi.Models/obj
+/DocumentsWebApi.PostgresqlData/bin/Debug/net9.0
+/DocumentsWebApi.PostgresqlData/obj
+/DocumentsWebApi.SqlServerData/bin/Debug/net9.0
+/DocumentsWebApi.SqlServerData/obj

@@ -1,7 +1,5 @@
 
 using Asp.Versioning;
-using DocumentsWebApi.Data;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace DocumentsWebApi
@@ -35,11 +33,12 @@ namespace DocumentsWebApi
                     options.SubstituteApiVersionInUrl = true;
                 })
                 .AddMvc();
-            
+
 
             // Configure the database
+            builder.ConfigureDbContextServices();
             //builder.Services.AddDbContext<DocumentDbContext>(opt => opt.UseInMemoryDatabase("DocumentsDb"));
-            builder.Services.AddDbContext<DocumentDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
+            //builder.Services.AddDbContext<DocumentDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
 
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
