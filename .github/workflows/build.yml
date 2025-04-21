@@ -2,8 +2,11 @@ name: Build Web API .NET 9
 
 on:
   push:
-    branches:
-        - '*'
+    branches: [ "*" ] # Trigger on any push to any branch
+
+  pull_request:
+    branches: [ "*" ] # Trigger on any pull request to any branch
+    types: [ closed, synchronize, opened, edited, reopened ] # Trigger when a pull request is closed (including merges)
         
 jobs:
   build:
@@ -39,7 +42,7 @@ jobs:
     name: Push to Docker Hub
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' # Only push on actual pushes
+    #if: github.event_name == 'push' # Only push on actual pushes
 
     steps:
     - uses: actions/checkout@v4
