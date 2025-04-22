@@ -3,7 +3,6 @@ using Asp.Versioning;
 using DocumentsWebApi.Business.Commands;
 using DocumentsWebApi.Infrastructure;
 using System.Text.Json;
-using static System.Net.WebRequestMethods;
 
 namespace DocumentsWebApi
 {
@@ -27,7 +26,7 @@ namespace DocumentsWebApi
                 {
                     options.ApiVersionReader = new UrlSegmentApiVersionReader();
                     options.AssumeDefaultVersionWhenUnspecified = true;
-                    options.DefaultApiVersion = new ApiVersion(1, 0);
+                    options.DefaultApiVersion = new ApiVersion(2, 0);
                     options.ReportApiVersions = true;
                 })
                 .AddApiExplorer(options =>
@@ -46,9 +45,12 @@ namespace DocumentsWebApi
             builder.Services.AddOpenApi("v2");
 
             // Register MediatR for CQRS
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateDocumentCommand>());
+            builder.Services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssemblyContaining<CreateDocumentCommand>();
+            });
 
-            // Add the custom exception handling middleware as a scoped service
+            // Add the custom exception handling middleware
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 

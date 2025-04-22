@@ -8,6 +8,7 @@ namespace DocumentsWebApi.Models
 
         [Required]
         [MinLength(2)]
+        [MaxLength(100)]
         public string Title { get; set; } = string.Empty;
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
