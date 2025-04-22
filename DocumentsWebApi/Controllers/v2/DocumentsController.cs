@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using DocumentsWebApi.Dtos.v2;
 using DocumentsWebApi.Infrastructure;
 using DocumentsWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -44,14 +45,20 @@ namespace DocumentsWebApi.Controllers.v2
         // PUT: api/Documents/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDocument(int id, Document document)
+        public async Task<IActionResult> PutDocument(int id, UpdateDocumentDto document)
         {
             if (id != document.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(document).State = EntityState.Modified;
+            var entity = _context.Documents.Find(id);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+            entity.Title = document.Title;
 
             try
             {

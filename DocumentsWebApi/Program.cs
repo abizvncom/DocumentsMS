@@ -44,7 +44,7 @@ namespace DocumentsWebApi
 
             var app = builder.Build();
 
-            app.ConfigureOpenApiDocuments();
+            app.ConfigureOpenApiDocs();
 
             app.UseHttpsRedirection();
 
