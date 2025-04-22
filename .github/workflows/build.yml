@@ -28,7 +28,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Publish
-      run: dotnet publish -c Release -o publish
+      run: dotnet publish DocumentsWebApi/DocumentsWebApi.csproj -c Release -o publish
 
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v5
