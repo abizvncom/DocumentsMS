@@ -1,9 +1,10 @@
 ﻿using Asp.Versioning;
-using DocumentsWebApi.Dtos.v2;
+using DocumentsWebApi.Business.Commands;
+using DocumentsWebApi.Business.Queries;
 using DocumentsWebApi.Infrastructure;
 using DocumentsWebApi.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DocumentsWebApi.Controllers.v2
 {
@@ -12,103 +13,58 @@ namespace DocumentsWebApi.Controllers.v2
     [ApiController]
     public class DocumentsController : ApiControllerBase
     {
-        private readonly IDocumentDbContext _context;
+        private readonly IMediator _mediator;
 
-        public DocumentsController(IDocumentDbContext context)
+        public DocumentsController(IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/Documents
         [HttpGet]
         public async Task<ActionResult<PaginatedList<Document>>> GetDocuments()
         {
-            var sources = _context.Documents.OrderByDescending(d => d.Id);
-            var documents = await PaginatedList<Document>.CreateAsync(sources, base.GetPageNumber(), base.GetPageSize());
-            return Ok(documents);
+            var query = new GetDocumentsQuery(base.GetPageNumber(), base.GetPageSize());
+
+            return await _mediator.Send(query);
         }
 
         // GET: api/Documents/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Document>> GetDocument(int id)
         {
-            var document = await _context.Documents.FindAsync(id);
+            var query = new GetDocumentByIdQuery(id);
 
-            if (document == null)
-            {
-                return NotFound();
-            }
-
-            return document;
+            return await _mediator.Send(query);
         }
 
         // PUT: api/Documents/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDocument(int id, UpdateDocumentDto document)
+        public async Task<ActionResult<Document>> PutDocument(int id, UpdateDocumentCommand command)
         {
-            if (id != document.Id)
-            {
-                return BadRequest();
-            }
-
-            var entity = _context.Documents.Find(id);
-            if (entity == null)
-            {
-                return NotFound();
-            }
-
-            entity.Title = document.Title;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DocumentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _mediator.Send(command);
         }
 
         // POST: api/Documents
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Document>> PostDocument(Document document)
+        public async Task<ActionResult<Document>> PostDocument(CreateDocumentCommand command)
         {
-            _context.Documents.Add(document);
-            await _context.SaveChangesAsync();
+            var document = await _mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetDocument), new { id = document.Id }, document);
+            return StatusCode(StatusCodes.Status201Created, document);
         }
 
         // DELETE: api/Documents/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDocument(int id)
         {
-            var document = await _context.Documents.FindAsync(id);
-            if (document == null)
-            {
-                return NotFound();
-            }
+            var command = new DeleteDocumentCommand(id);
 
-            _context.Documents.Remove(document);
-            await _context.SaveChangesAsync();
+            await _mediator.Send(command);
 
             return NoContent();
-        }
-
-        private bool DocumentExists(int id)
-        {
-            return _context.Documents.Any(e => e.Id == id);
         }
     }
 }

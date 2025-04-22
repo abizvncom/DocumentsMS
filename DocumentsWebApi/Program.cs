@@ -1,5 +1,6 @@
 
 using Asp.Versioning;
+using DocumentsWebApi.Business.Commands;
 using System.Text.Json;
 
 namespace DocumentsWebApi
@@ -41,6 +42,9 @@ namespace DocumentsWebApi
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi("v1");
             builder.Services.AddOpenApi("v2");
+
+            // Register MediatR for CQRS
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateDocumentCommand>());
 
             var app = builder.Build();
 

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,15 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\**" />
     <Compile Remove="Migrations\**" />
+    <Content Remove="Dtos\**" />
     <Content Remove="Migrations\**" />
+    <EmbeddedResource Remove="Dtos\**" />
     <EmbeddedResource Remove="Migrations\**" />
+    <None Remove="Dtos\**" />
     <None Remove="Migrations\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -27,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DocumentsWebApi.Business\DocumentsWebApi.Business.csproj" />
     <ProjectReference Include="..\DocumentsWebApi.Models\DocumentsWebApi.Models.csproj" />
     <ProjectReference Include="..\DocumentsWebApi.PostgresqlData\DocumentsWebApi.PostgresqlData.csproj" />
     <ProjectReference Include="..\DocumentsWebApi.SqlServerData\DocumentsWebApi.SqlServerData.csproj" />

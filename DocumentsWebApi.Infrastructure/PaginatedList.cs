@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DocumentsWebApi.Controllers
+namespace DocumentsWebApi.Infrastructure
 {
     public class PaginatedList<T>
     {
+        public List<T> Items { get; private set; } = new List<T>();
+      
         public int PageNumber { get; private set; }
 
         public int TotalPages { get; private set; }
@@ -15,8 +17,6 @@ namespace DocumentsWebApi.Controllers
         public bool HasPreviousPage => PageNumber > 1;
 
         public bool HasNextPage => PageNumber < TotalPages;
-
-        public List<T> Items { get; private set; } = new List<T>();
 
         public PaginatedList(IList<T> items, int count, int pageNumber, int pageSize)
         {

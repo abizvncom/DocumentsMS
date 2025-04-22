@@ -16,3 +16,7 @@
 /DocumentsWebApi.PostgresqlData/obj
 /DocumentsWebApi.SqlServerData/bin/Debug/net9.0
 /DocumentsWebApi.SqlServerData/obj
+/DocumentsWebApi.Business/bin/Debug/net9.0
+/DocumentsWebApi.Business/obj
+/DocumentsWebApi.Dtos/bin/Debug/net9.0
+/DocumentsWebApi.Dtos/obj
