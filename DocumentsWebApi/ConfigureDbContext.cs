@@ -10,7 +10,7 @@ namespace DocumentsWebApi
         public static void ConfigureDbContextServices(this IHostApplicationBuilder builder)
         {
             // Configure the database
-            var databaseProvider = Environment.GetEnvironmentVariable("ConnectionStrings.DatabaseProvider");
+            var databaseProvider = Environment.GetEnvironmentVariable("ConnectionStrings_DatabaseProvider");
             if (string.IsNullOrEmpty(databaseProvider))
             {
                 databaseProvider = builder.Configuration.GetConnectionString("DatabaseProvider");
@@ -21,7 +21,7 @@ namespace DocumentsWebApi
                 case "sqlserver":
                     builder.Services.AddSingleton<IDocumentDbContext, SqlServerDocumentDbContext>(f =>
                     {
-                        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings.SqlServerConnection");
+                        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings_SqlServerConnection");
                         if (string.IsNullOrEmpty(connectionString))
                         {
                             connectionString = builder.Configuration.GetConnectionString("SqlServerConnection");
@@ -32,7 +32,11 @@ namespace DocumentsWebApi
                             .Options;
 
                         var dbContext = new SqlServerDocumentDbContext(options);
-                        dbContext.Database.Migrate();
+
+                        if (RequiresMigration())
+                        {
+                            dbContext.Database.Migrate();
+                        }
 
                         return dbContext;
                     });
@@ -41,7 +45,7 @@ namespace DocumentsWebApi
                 case "postgresql":
                     builder.Services.AddSingleton<IDocumentDbContext, PostgresqlDocumentDbContext>(f =>
                     {
-                        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings.PostgresConnection");
+                        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings_PostgresConnection");
                         if (string.IsNullOrEmpty(connectionString))
                         {
                             connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
@@ -52,7 +56,11 @@ namespace DocumentsWebApi
                             .Options;
 
                         var dbContext = new PostgresqlDocumentDbContext(options);
-                        dbContext.Database.Migrate();
+
+                        if (RequiresMigration())
+                        {
+                            dbContext.Database.Migrate();
+                        }
 
                         return dbContext;
                     });
@@ -61,6 +69,12 @@ namespace DocumentsWebApi
                 default:
                     throw new InvalidOperationException($"Unsupported database provider: {databaseProvider}");
             }
+        }
+
+        private static bool RequiresMigration()
+        {
+            var configuredEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            return string.Equals(configuredEnv, "IntegrationTest", StringComparison.InvariantCultureIgnoreCase) == false;
         }
     }
 }

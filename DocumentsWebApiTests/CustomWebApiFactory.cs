@@ -27,6 +27,7 @@ namespace DocumentsWebApiTests
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTest");
             Environment.SetEnvironmentVariable("ConnectionStrings:SqlServerConnection", _connectionString);
             Environment.SetEnvironmentVariable("ConnectionStrings:PostgresConnection", _connectionString);
             Environment.SetEnvironmentVariable("ConnectionStrings:DatabaseProvider", _dbProvider);

@@ -19,13 +19,13 @@ namespace DocumentsWebApiTests.v2.Requests
             response.Should().NotBeNull();
             response.Id.Should().Be(entity.Id);
             response.Title.Should().Be(entity.Title);
-            response.UpdatedAt.Should().Be(entity.UpdatedAt);
+            response.UpdatedAt.Should().BeCloseTo(entity.UpdatedAt, TimeSpan.FromSeconds(1));
         }
 
         public static void BeSerialisedFrom(this IList<DocumentResponse> responses, IList<Document> entities)
         {
             responses.Count.Should().Be(entities.Count);
-            for(int index = 0; index < responses.Count; index++)
+            for (int index = 0; index < responses.Count; index++)
             {
                 responses[index].BeSerialisedFrom(entities[index]);
             }

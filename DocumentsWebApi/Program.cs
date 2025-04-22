@@ -1,7 +1,9 @@
 
 using Asp.Versioning;
 using DocumentsWebApi.Business.Commands;
+using DocumentsWebApi.Infrastructure;
 using System.Text.Json;
+using static System.Net.WebRequestMethods;
 
 namespace DocumentsWebApi
 {
@@ -46,6 +48,10 @@ namespace DocumentsWebApi
             // Register MediatR for CQRS
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateDocumentCommand>());
 
+            // Add the custom exception handling middleware as a scoped service
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
+
             var app = builder.Build();
 
             app.ConfigureOpenApiDocs();
@@ -55,6 +61,8 @@ namespace DocumentsWebApi
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseExceptionHandler();
 
             app.Run();
         }
